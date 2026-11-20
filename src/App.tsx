@@ -146,15 +146,12 @@ export default function App() {
             >
               🎁
             </motion.div>
-            <h1>Hemlig tomte</h1>
-            <p className="small">
-              Skriv ditt lösenord för att öppna din julklapp
-            </p>
+            <h1>Secret Santa</h1>
             <motion.input
               key={shake}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="lösenord"
+              placeholder="Lösenord"
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect="off"
