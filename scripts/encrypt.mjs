@@ -1,5 +1,5 @@
 // Usage: npm run encrypt
-// Reads secrets.local.json (UNTRACKED: password -> who they give to)
+// Reads secrets.local.json (UNTRACKED: password -> { from, to })
 // and writes src/data.enc.json (committed, encrypted with each password).
 import { readFileSync, writeFileSync } from "node:fs";
 import { webcrypto as crypto } from "node:crypto";
@@ -11,7 +11,7 @@ const b64 = (u8) => Buffer.from(u8).toString("base64");
 const secrets = JSON.parse(readFileSync("secrets.local.json", "utf8"));
 const blobs = [];
 
-for (const [password, receiver] of Object.entries(secrets)) {
+for (const [password, pair] of Object.entries(secrets)) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(normalize(password)), "PBKDF2", false, ["deriveKey"]);
@@ -22,7 +22,7 @@ for (const [password, receiver] of Object.entries(secrets)) {
     false,
     ["encrypt"],
   );
-  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(receiver));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(JSON.stringify(pair)));
   blobs.push({ salt: b64(salt), iv: b64(iv), ct: b64(ct) });
 }
 

@@ -1,3 +1,95 @@
-/* intentionally minimal – styling comes later */
-body { font-family: system-ui, sans-serif; }
-main { max-width: 420px; margin: 4rem auto; padding: 0 1rem; text-align: center; }
+:root {
+  --bg1: #1b2a49;
+  --bg2: #3a1c4a;
+  --card: #fff8f0;
+  --red: #d7263d;
+  --ink: #3a2a2a;
+  font-family: "Trebuchet MS", "Comic Sans MS", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2));
+  color: var(--ink);
+}
+main {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.stars {
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff8, transparent),
+    radial-gradient(2px 2px at 70% 20%, #fff8, transparent),
+    radial-gradient(1.5px 1.5px at 40% 80%, #fff8, transparent),
+    radial-gradient(2px 2px at 85% 65%, #fff8, transparent),
+    radial-gradient(1.5px 1.5px at 10% 70%, #fff8, transparent);
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { opacity: 0.4; } to { opacity: 1; } }
+.card {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  background: var(--card);
+  border-radius: 28px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 12px 40px #0006;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+}
+.gift { font-size: 72px; line-height: 1; }
+h1, h2 { margin: 0; color: var(--red); }
+.small { margin: 0; opacity: 0.75; }
+input {
+  width: 100%;
+  font: inherit;
+  font-size: 18px;
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 2px solid #e8d5c4;
+  background: #fff;
+  outline: none;
+}
+input:focus, input[aria-invalid="true"] { border-color: var(--red); }
+button {
+  font: inherit;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: var(--red);
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 36px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.6; }
+button.ghost { background: transparent; color: var(--red); text-decoration: underline; font-size: 15px; }
+.error { color: var(--red); margin: 0; font-size: 14px; }
+.reveal { min-height: 340px; justify-content: flex-start; }
+/* receiver's name: centered in the middle of the whole box */
+.name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  font-size: clamp(40px, 12vw, 64px);
+  pointer-events: none;
+}
+/* emojis float over the page background, behind the card */
+.sparkle-layer { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.sparkle { position: absolute; pointer-events: none; }

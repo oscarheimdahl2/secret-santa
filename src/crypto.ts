@@ -22,13 +22,18 @@ async function deriveKey(password: string, salt: BufferSource) {
   );
 }
 
-/** Tries every blob; returns the receiver's name, or null if the password matches none. */
-export async function reveal(password: string, blobs: Blob[]): Promise<string | null> {
+export interface Result {
+  from: string;
+  to: string;
+}
+
+/** Tries every blob; returns { from, to }, or null if the password matches none. */
+export async function reveal(password: string, blobs: Blob[]): Promise<Result | null> {
   for (const blob of blobs) {
     try {
       const key = await deriveKey(password, b64(blob.salt));
       const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(blob.iv) }, key, b64(blob.ct));
-      return new TextDecoder().decode(plain);
+      return JSON.parse(new TextDecoder().decode(plain)) as Result;
     } catch {
       /* wrong password for this blob */
     }
