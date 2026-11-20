@@ -1,17 +1,16 @@
 import { useState, type FormEvent } from "react";
-import data from "./data.json";
-
-const lookup = data as Record<string, string>;
+import { reveal, type Blob } from "./crypto";
+import blobs from "./data.enc.json";
 
 export default function App() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState<string | null>(null);
   const [error, setError] = useState(false);
 
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
-    const result = lookup[password.trim().normalize("NFC").toLowerCase()];
-    setName(result ?? null);
+    const result = await reveal(password, blobs as Blob[]);
+    setName(result);
     setError(!result);
   }
 
